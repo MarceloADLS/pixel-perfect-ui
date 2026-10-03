@@ -12,13 +12,13 @@ export function answer(q: string, assets: Asset[]): string {
     const w = assets.filter((a) => a.dy).sort((a, b) => (b.dy ?? 0) - (a.dy ?? 0));
     if (!w.length) return "Nenhum ativo da carteira possui Dividend Yield registrado.";
     const avg = w.reduce((x, a) => x + (a.dy ?? 0), 0) / w.length;
-    return `O maior Dividend Yield da sua carteira é de **${w[0].ticker}**, com **${fmt(w[0].dy!)}%**, enquanto a média dos ativos com proventos é de **${fmt(avg)}%**.\n\nRanking:\n${w.slice(0, 5).map((a, i) => `${i + 1}. ${a.ticker} — ${fmt(a.dy!)}%`).join("\n")}\n\n_Informação para análise; não constitui recomendação._`;
+    return `O maior Dividend Yield da sua carteira é de **${w[0]!.ticker}**, com **${fmt(w[0]!.dy!)}%**, enquanto a média dos ativos com proventos é de **${fmt(avg)}%**.\n\nRanking:\n${w.slice(0, 5).map((a, i) => `${i + 1}. ${a.ticker} — ${fmt(a.dy!)}%`).join("\n")}\n\n_Informação para análise; não constitui recomendação._`;
   }
   if (/risco|concentr/.test(t)) {
     const top = [...assets].sort((a, b) => value(b) - value(a)).slice(0, 3);
     const lines = top.map((a) => `- **${a.ticker}**: ${fmt((value(a) / s.total) * 100)}% da carteira`).join("\n");
     const big = s.byClass.sort((a, b) => b.pct - a.pct)[0];
-    return `Os ativos com maior participação são:\n${lines}\n\nPor classe, a maior exposição está em **${big.cls}** (${fmt(big.pct)}%). Ativos mais voláteis na semana: ${[...assets].sort((a, b) => Math.abs(b.weekChange) - Math.abs(a.weekChange)).slice(0, 2).map((a) => `${a.ticker} (${fmt(a.weekChange)}%)`).join(" e ")}.`;
+    return `Os ativos com maior participação são:\n${lines}\n\nPor classe, a maior exposição está em **${big!.cls}** (${fmt(big!.pct)}%). Ativos mais voláteis na semana: ${[...assets].sort((a, b) => Math.abs(b.weekChange) - Math.abs(a.weekChange)).slice(0, 2).map((a) => `${a.ticker} (${fmt(a.weekChange)}%)`).join(" e ")}.`;
   }
   if (/fii|imobili/.test(t)) {
     const fiis = new Set(assets.filter((a) => a.cls === "FIIs").map((a) => a.ticker));
@@ -28,7 +28,7 @@ export function answer(q: string, assets: Asset[]): string {
   }
   if (/varia|semana|subiu|caiu/.test(t)) {
     const sorted = [...assets].sort((a, b) => b.weekChange - a.weekChange);
-    return `Variação na semana:\n\n- Maior alta: **${sorted[0].ticker}** (${fmt(sorted[0].weekChange)}%)\n- Maior queda: **${sorted.at(-1)!.ticker}** (${fmt(sorted.at(-1)!.weekChange)}%)\n\n${sorted.map((a) => `${a.ticker}: ${a.weekChange > 0 ? "+" : ""}${fmt(a.weekChange)}%`).join(" · ")}`;
+    return `Variação na semana:\n\n- Maior alta: **${sorted[0]!.ticker}** (${fmt(sorted[0]!.weekChange)}%)\n- Maior queda: **${sorted.at(-1)!.ticker}** (${fmt(sorted.at(-1)!.weekChange)}%)\n\n${sorted.map((a) => `${a.ticker}: ${a.weekChange > 0 ? "+" : ""}${fmt(a.weekChange)}%`).join(" · ")}`;
   }
   if (/distribu|aloca|classe/.test(t)) {
     return `Sua carteira está distribuída em ${dist}.\n\n${CLASSES.filter((c) => !s.byClass.find((b) => b.cls === c)).map((c) => `Não há posições em ${c}.`).join(" ")}`.trim();

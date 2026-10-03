@@ -131,7 +131,7 @@ function AddSheet({ open, onOpenChange, onAdd }: { open: boolean; onOpenChange: 
             e.preventDefault();
             const q = parseFloat(qty.replace(",", "."));
             const p = parseFloat(avg.replace(",", "."));
-            if (!ticker || !q || !p) return toast.error("Preencha todos os campos");
+            if (!ticker || !q || !p) { toast.error("Preencha todos os campos"); return; }
             onAdd({ ticker: ticker.toUpperCase(), name: ticker.toUpperCase(), cls, qty: q, avgPrice: p, price: p, dayChange: 0, weekChange: 0, dividendsReceived: 0 });
             setTicker(""); setQty(""); setAvg("");
           }}

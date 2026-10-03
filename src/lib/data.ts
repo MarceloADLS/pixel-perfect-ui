@@ -35,7 +35,7 @@ export const INITIAL_ASSETS: Asset[] = [
   { ticker: "KNRI11", name: "Kinea Renda Imob.", cls: "FIIs", qty: 6, avgPrice: 139.0, price: 134.2, dayChange: -0.45, weekChange: -1.4, dy: 7.9, pvp: 0.91, dividendsReceived: 52.0, extra: { Segmento: "Híbrido", Vacância: "6,8%", Imóveis: "21" } },
   { ticker: "TESOURO-IPCA", name: "Tesouro IPCA+ 2035", cls: "Renda Fixa", qty: 1, avgPrice: 2400, price: 2614.5, dayChange: 0.03, weekChange: 0.1, dividendsReceived: 0, extra: { Taxa: "IPCA + 6,4%", Vencimento: "15/05/2035", Liquidez: "D+1" } },
   { ticker: "CDB-INTER", name: "CDB Banco Inter 110% CDI", cls: "Renda Fixa", qty: 1, avgPrice: 1300, price: 1398.2, dayChange: 0.04, weekChange: 0.2, dividendsReceived: 0, extra: { Taxa: "110% CDI", Vencimento: "02/2027", FGC: "Sim" } },
-  { ticker: "IVVB11", name: "iShares S&P 500", cls: "Exterior", qty: 6, avgPrice: 290.0, price: 342.7, dayChange: 0.88, weekChange: 2.4, pvp: undefined, dividendsReceived: 0, extra: { "Taxa adm.": "0,23%", Índice: "S&P 500" } },
+  { ticker: "IVVB11", name: "iShares S&P 500", cls: "Exterior", qty: 6, avgPrice: 290.0, price: 342.7, dayChange: 0.88, weekChange: 2.4, dividendsReceived: 0, extra: { "Taxa adm.": "0,23%", Índice: "S&P 500" } },
   { ticker: "BTC", name: "Bitcoin", cls: "Cripto", qty: 0.0045, avgPrice: 310000, price: 352800, dayChange: 2.74, weekChange: 6.9, dividendsReceived: 0, extra: { "Market cap": "US$ 1,3 tri", "Máx. 52s": "R$ 398 mil" } },
 ];
 
@@ -83,7 +83,7 @@ export function priceHistory(a: Asset) {
     p = p * (1 + (rnd() - 0.45) * 0.04);
     pts.push({ d: `${i + 1}`, p });
   }
-  const k = a.price / pts[pts.length - 1].p;
+  const k = a.price / (pts[pts.length - 1]?.p ?? a.price);
   return pts.map((x) => ({ ...x, p: +(x.p * k).toFixed(2) }));
 }
 

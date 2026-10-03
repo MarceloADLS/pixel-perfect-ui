@@ -10,33 +10,91 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CarteiraRouteImport } from './routes/carteira'
+import { Route as IaRouteImport } from './routes/ia'
+import { Route as NoticiasRouteImport } from './routes/noticias'
+import { Route as PerfilRouteImport } from './routes/perfil'
+import { Route as AtivoTickerRouteImport } from './routes/ativo.$ticker'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CarteiraRoute = CarteiraRouteImport.update({
+  id: '/carteira',
+  path: '/carteira',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IaRoute = IaRouteImport.update({
+  id: '/ia',
+  path: '/ia',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NoticiasRoute = NoticiasRouteImport.update({
+  id: '/noticias',
+  path: '/noticias',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PerfilRoute = PerfilRouteImport.update({
+  id: '/perfil',
+  path: '/perfil',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AtivoTickerRoute = AtivoTickerRouteImport.update({
+  id: '/ativo/$ticker',
+  path: '/ativo/$ticker',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/carteira': typeof CarteiraRoute
+  '/ia': typeof IaRoute
+  '/noticias': typeof NoticiasRoute
+  '/perfil': typeof PerfilRoute
+  '/ativo/$ticker': typeof AtivoTickerRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/carteira': typeof CarteiraRoute
+  '/ia': typeof IaRoute
+  '/noticias': typeof NoticiasRoute
+  '/perfil': typeof PerfilRoute
+  '/ativo/$ticker': typeof AtivoTickerRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/carteira': typeof CarteiraRoute
+  '/ia': typeof IaRoute
+  '/noticias': typeof NoticiasRoute
+  '/perfil': typeof PerfilRoute
+  '/ativo/$ticker': typeof AtivoTickerRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    '/' | '/carteira' | '/ia' | '/noticias' | '/perfil' | '/ativo/$ticker'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/carteira' | '/ia' | '/noticias' | '/perfil' | '/ativo/$ticker'
+  id:
+    | '__root__'
+    | '/'
+    | '/carteira'
+    | '/ia'
+    | '/noticias'
+    | '/perfil'
+    | '/ativo/$ticker'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CarteiraRoute: typeof CarteiraRoute
+  IaRoute: typeof IaRoute
+  NoticiasRoute: typeof NoticiasRoute
+  PerfilRoute: typeof PerfilRoute
+  AtivoTickerRoute: typeof AtivoTickerRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +106,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/carteira': {
+      id: '/carteira'
+      path: '/carteira'
+      fullPath: '/carteira'
+      preLoaderRoute: typeof CarteiraRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ia': {
+      id: '/ia'
+      path: '/ia'
+      fullPath: '/ia'
+      preLoaderRoute: typeof IaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/noticias': {
+      id: '/noticias'
+      path: '/noticias'
+      fullPath: '/noticias'
+      preLoaderRoute: typeof NoticiasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/perfil': {
+      id: '/perfil'
+      path: '/perfil'
+      fullPath: '/perfil'
+      preLoaderRoute: typeof PerfilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ativo/$ticker': {
+      id: '/ativo/$ticker'
+      path: '/ativo/$ticker'
+      fullPath: '/ativo/$ticker'
+      preLoaderRoute: typeof AtivoTickerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CarteiraRoute: CarteiraRoute,
+  IaRoute: IaRoute,
+  NoticiasRoute: NoticiasRoute,
+  PerfilRoute: PerfilRoute,
+  AtivoTickerRoute: AtivoTickerRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

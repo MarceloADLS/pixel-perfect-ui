@@ -7,9 +7,9 @@ import { answer, SUGGESTIONS } from "@/lib/assistant";
 export const Route = createFileRoute("/ia")({
   head: () => ({
     meta: [
-      { title: "Assistente IA — Lume Investimentos" },
+      { title: "Indicadores IA — Lume Investimentos" },
       { name: "description", content: "Pergunte sobre sua carteira e receba análises neutras baseadas nos seus dados." },
-      { property: "og:title", content: "Assistente IA — Lume Investimentos" },
+      { property: "og:title", content: "Indicadores IA — Lume Investimentos" },
       { property: "og:description", content: "Pergunte sobre sua carteira e receba análises neutras baseadas nos seus dados." },
     ],
   }),
@@ -60,15 +60,15 @@ function IA() {
       <header className="mb-4 flex items-center gap-3">
         <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-glow"><Bot className="h-6 w-6" /></div>
         <div>
-          <h1 className="text-xl font-semibold">Assistente Lume</h1>
-          <p className="text-xs text-muted-foreground">Análises neutras com base na sua carteira</p>
+          <h1 className="text-xl font-semibold">Indicadores</h1>
+          <p className="text-xs text-muted-foreground">Indicadores comparados de forma neutra</p>
         </div>
       </header>
 
       {msgs.length === 0 && (
         <div className="bg-hero mt-4 rounded-3xl border border-border p-5 animate-rise">
           <p className="font-display text-lg font-semibold">Olá, Marcelo 👋</p>
-          <p className="mt-1 text-sm text-muted-foreground">Pergunte sobre distribuição, dividendos, riscos ou notícias dos seus ativos. Eu apresento dados e comparações — a decisão é sempre sua.</p>
+          <p className="mt-1 text-sm text-muted-foreground">Pergunte sobre P/VP, Dividend Yield, P/L ou variações dos ativos que você acompanha. Eu comparo dados — sem recomendar compra ou venda.</p>
         </div>
       )}
 
@@ -96,7 +96,7 @@ function IA() {
 
       <div className="fixed inset-x-0 bottom-[88px] z-30 mx-auto max-w-md px-4">
         <form onSubmit={(e) => { e.preventDefault(); send(input); }} className="flex items-center gap-2 rounded-full border border-border bg-surface/95 p-1.5 pl-5 backdrop-blur-xl">
-          <input ref={ta} value={input} onChange={(e) => setInput(e.target.value)} placeholder="Pergunte sobre sua carteira…" className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground" />
+          <input ref={ta} value={input} onChange={(e) => setInput(e.target.value)} placeholder="Pergunte sobre indicadores…" className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground" />
           <button aria-label="Enviar" disabled={!input.trim() || typing} className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground transition disabled:opacity-40 active:scale-90">
             <ArrowUp className="h-4 w-4" />
           </button>

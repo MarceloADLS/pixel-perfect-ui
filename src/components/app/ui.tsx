@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import type { Relevance } from "@/lib/data";
 
 export function Page({ title, subtitle, right, children }: { title?: string; subtitle?: string; right?: ReactNode; children: ReactNode }) {
   return (
@@ -39,12 +40,14 @@ export function Change({ v, className }: { v: number; className?: string }) {
   );
 }
 
+export function RelevanceBadge({ r }: { r: Relevance }) {
+  const tone = r === "Alta" ? "bg-primary text-primary-foreground" : r === "Média" ? "bg-secondary text-foreground" : "bg-muted text-muted-foreground";
+  return <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-bold", tone)}>Relevância {r.toLowerCase()}</span>;
+}
+
 export function TickerBadge({ ticker, color }: { ticker: string; color: string }) {
   return (
-    <div
-      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-[10px] font-bold text-background"
-      style={{ background: color }}
-    >
+    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-[10px] font-bold text-background" style={{ background: color }}>
       {ticker.replace(/[^A-Z]/g, "").slice(0, 4)}
     </div>
   );

@@ -34,7 +34,7 @@ function insights(a: Asset, all: Asset[]) {
   cmp("pvp", "P/VP");
   cmp("pl", "P/L");
   out.push(`Variação de ${a.weekChange > 0 ? "+" : ""}${fmt(a.weekChange, 1)}% na semana.`);
-  if (a.extra?.Vacância) out.push(`Vacância atual reportada: ${a.extra.Vacância}.`);
+  if (a.extra?.["Vacância"]) out.push(`Vacância atual reportada: ${a.extra["Vacância"]}.`);
   return out;
 }
 

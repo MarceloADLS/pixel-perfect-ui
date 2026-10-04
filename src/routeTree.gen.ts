@@ -10,7 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as CarteiraRouteImport } from './routes/carteira'
+import { Route as AtivosRouteImport } from './routes/ativos'
 import { Route as IaRouteImport } from './routes/ia'
 import { Route as NoticiasRouteImport } from './routes/noticias'
 import { Route as PerfilRouteImport } from './routes/perfil'
@@ -21,9 +21,9 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CarteiraRoute = CarteiraRouteImport.update({
-  id: '/carteira',
-  path: '/carteira',
+const AtivosRoute = AtivosRouteImport.update({
+  id: '/ativos',
+  path: '/ativos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IaRoute = IaRouteImport.update({
@@ -49,7 +49,7 @@ const AtivoTickerRoute = AtivoTickerRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/carteira': typeof CarteiraRoute
+  '/ativos': typeof AtivosRoute
   '/ia': typeof IaRoute
   '/noticias': typeof NoticiasRoute
   '/perfil': typeof PerfilRoute
@@ -57,7 +57,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/carteira': typeof CarteiraRoute
+  '/ativos': typeof AtivosRoute
   '/ia': typeof IaRoute
   '/noticias': typeof NoticiasRoute
   '/perfil': typeof PerfilRoute
@@ -66,7 +66,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/carteira': typeof CarteiraRoute
+  '/ativos': typeof AtivosRoute
   '/ia': typeof IaRoute
   '/noticias': typeof NoticiasRoute
   '/perfil': typeof PerfilRoute
@@ -75,13 +75,13 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/carteira' | '/ia' | '/noticias' | '/perfil' | '/ativo/$ticker'
+    '/' | '/ativos' | '/ia' | '/noticias' | '/perfil' | '/ativo/$ticker'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/carteira' | '/ia' | '/noticias' | '/perfil' | '/ativo/$ticker'
+  to: '/' | '/ativos' | '/ia' | '/noticias' | '/perfil' | '/ativo/$ticker'
   id:
     | '__root__'
     | '/'
-    | '/carteira'
+    | '/ativos'
     | '/ia'
     | '/noticias'
     | '/perfil'
@@ -90,7 +90,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CarteiraRoute: typeof CarteiraRoute
+  AtivosRoute: typeof AtivosRoute
   IaRoute: typeof IaRoute
   NoticiasRoute: typeof NoticiasRoute
   PerfilRoute: typeof PerfilRoute
@@ -106,11 +106,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/carteira': {
-      id: '/carteira'
-      path: '/carteira'
-      fullPath: '/carteira'
-      preLoaderRoute: typeof CarteiraRouteImport
+    '/ativos': {
+      id: '/ativos'
+      path: '/ativos'
+      fullPath: '/ativos'
+      preLoaderRoute: typeof AtivosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ia': {
@@ -146,7 +146,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CarteiraRoute: CarteiraRoute,
+  AtivosRoute: AtivosRoute,
   IaRoute: IaRoute,
   NoticiasRoute: NoticiasRoute,
   PerfilRoute: PerfilRoute,

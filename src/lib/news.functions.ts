@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { NEWS_SOURCES, parseFeed } from "./news";
+import { NEWS_SOURCES, parseFeed, decodeFeed } from "./news";
 import type { News } from "./data";
 
 type FeedResult = { articles: News[]; unavailable: string[] };
@@ -12,7 +12,7 @@ export const getNews = createServerFn({ method: "GET" }).handler(async (): Promi
     try {
       const response = await fetch(source.url, { signal: AbortSignal.timeout(10000), headers: { Accept: "application/rss+xml, application/xml, text/xml" } });
       if (!response.ok) throw new Error("Publisher unavailable");
-      const articles = parseFeed(await response.text(), source);
+      const articles = parseFeed(decodeFeed(await response.arrayBuffer(), response.headers.get("content-type") ?? ""), source);
       return { articles, unavailable: articles.length ? [] : [source.name] };
     } catch { return { articles: [] as News[], unavailable: [source.name] }; }
   }));

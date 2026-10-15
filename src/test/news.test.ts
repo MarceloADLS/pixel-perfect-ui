@@ -1,10 +1,14 @@
 import { describe, expect, it } from "vitest";
 import { INITIAL_ASSETS } from "@/lib/data";
-import { matchNewsToAssets, NEWS_SOURCES, parseFeed, parsePublishedAt, safeArticleUrl } from "@/lib/news";
+import { decodeFeed, matchNewsToAssets, NEWS_SOURCES, parseFeed, parsePublishedAt, safeArticleUrl } from "@/lib/news";
 
 const xml = `<rss><channel><item><title>Petrobras e Itaú anunciam resultados</title><link>https://www.infomoney.com.br/mercados/noticia-real/</link><pubDate>Thu, 15 Oct 2026 12:00:00 GMT</pubDate><description><![CDATA[<p>Lucro informado pelas companhias.</p><script>alert(1)</script>]]></description></item></channel></rss>`;
 
 describe("Publisher news", () => {
+  it("preserves Portuguese accents from the UOL Latin-1 feed", () => {
+    const bytes = new Uint8Array([68, 243, 108, 97, 114]);
+    expect(decodeFeed(bytes.buffer, "text/xml;charset=ISO-8859-1")).toBe("Dólar");
+  });
   it("keeps the real publisher summary and original article URL", () => {
     const [article] = parseFeed(xml, NEWS_SOURCES[0]);
     expect(article?.source).toBe("InfoMoney");

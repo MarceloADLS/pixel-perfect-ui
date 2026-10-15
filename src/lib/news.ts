@@ -4,7 +4,15 @@ import type { Asset, News, NewsTag } from "./data";
 export const NEWS_SOURCES = [
   { name: "InfoMoney", url: "https://www.infomoney.com.br/feed/", domain: "infomoney.com.br" },
   { name: "UOL Economia", url: "https://rss.uol.com.br/feed/economia.xml", domain: "uol.com.br" },
-];
+] as const;
+
+export function decodeFeed(buffer: ArrayBuffer, contentType: string): string {
+  const declared = /charset\s*=\s*["']?([\w-]+)/i.exec(contentType)?.[1];
+  const header = new TextDecoder().decode(buffer.slice(0, 180));
+  const encoding = declared ?? /encoding=["']([^"']+)/i.exec(header)?.[1] ?? "utf-8";
+  try { return new TextDecoder(encoding).decode(buffer); }
+  catch { return new TextDecoder().decode(buffer); }
+}
 
 export function plainText(value: unknown): string {
   return String(value ?? "").replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "").replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, "").replace(/<[^>]*>/g, " ").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#(?:0*39|x27);/gi, "'").replace(/&#(\d+);/g, (_, code: string) => String.fromCodePoint(Math.min(Number(code), 0x10ffff))).replace(/\s+/g, " ").trim();

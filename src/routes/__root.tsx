@@ -15,6 +15,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { PortfolioProvider } from "@/lib/portfolio";
 import { BottomNav } from "@/components/app/BottomNav";
 import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "@/lib/theme";
 
 function NotFoundComponent() {
   return (
@@ -68,7 +69,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "Acompanhe sua carteira, indicadores e notícias dos seus ativos com IA." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "theme-color", content: "#141d19" },
+      { name: "theme-color", content: "#0b0b0b" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -103,11 +104,11 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <PortfolioProvider>
+      <ThemeProvider><PortfolioProvider>
         <Outlet />
         <BottomNav />
         <Toaster />
-      </PortfolioProvider>
+      </PortfolioProvider></ThemeProvider>
     </QueryClientProvider>
   );
 }

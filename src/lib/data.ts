@@ -72,6 +72,9 @@ export interface News {
   date: string;
   tag: NewsTag;
   relevance: Relevance;
+  url?: string;
+  publishedAt?: string;
+  tickers?: string[];
 }
 
 export const NEWS: News[] = [

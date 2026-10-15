@@ -4,17 +4,23 @@ import { Bell, Newspaper, Activity, LineChart as LineIcon, CalendarDays, Zap } f
 import { Bar, BarChart, Cell, ResponsiveContainer, XAxis, Tooltip } from "recharts";
 import { Page, Section } from "@/components/app/ui";
 import { usePortfolio } from "@/lib/portfolio";
-import { ALERTS, DAILY_FACTS, NEWS } from "@/lib/data";
+import { ALERTS, type News } from "@/lib/data";
+import { newsQueryOptions, useNews } from "@/lib/news-query";
+import { NewsDetails } from "@/components/app/NewsDetails";
+import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { RelevanceBadge } from "@/components/app/ui";
 
 export const Route = createFileRoute("/")({
+  loader: ({ context }) => context.queryClient.ensureQueryData(newsQueryOptions),
   head: () => ({
     meta: [
       { title: "Início — Lume" },
       { name: "description", content: "Notícias e fatos do dia sobre os ativos que você acompanha." },
       { property: "og:title", content: "Início — Lume" },
       { property: "og:description", content: "Notícias e fatos do dia sobre os ativos que você acompanha." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Home,
@@ -25,8 +31,8 @@ const alertIcon = { news: Newspaper, dividend: Zap, price: Activity, indicator: 
 function Home() {
   const { assets } = usePortfolio();
   const [alertsOpen, setAlertsOpen] = useState(false);
-  const set = new Set(assets.map((a) => a.ticker));
-  const news = NEWS.filter((n) => set.has(n.ticker));
+  const { news, unavailable } = useNews();
+  const [article, setArticle] = useState<News | null>(null);
   const moves = [...assets].sort((a, b) => b.dayChange - a.dayChange).map((a) => ({ t: a.ticker, v: a.dayChange }));
   const unread = ALERTS.filter((a) => a.unread).length;
 
@@ -50,26 +56,27 @@ function Home() {
         <p className="text-xs font-semibold uppercase tracking-wider text-primary">Resumo do dia</p>
         <h1 className="mt-1 text-2xl font-semibold">{news.filter((n) => n.relevance === "Alta").length} fatos relevantes nos seus {assets.length} ativos</h1>
         <ul className="mt-4 space-y-2.5">
-          {DAILY_FACTS.map((f) => (
-            <li key={f} className="flex gap-2.5 text-sm text-muted-foreground">
+          {news.slice(0, 4).map((n) => (
+            <li key={n.id} className="flex gap-2.5 text-sm text-muted-foreground">
               <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-              {f}
+              {n.title}
             </li>
           ))}
         </ul>
+        {news.length === 0 && <p className="mt-4 text-sm text-muted-foreground">{unavailable.length === 2 ? "As fontes de notícias estão temporariamente indisponíveis." : "Nenhuma notícia recente encontrada para seus ativos."}</p>}
       </div>
 
       <Section title="Destaques recentes" action={<Link to="/noticias" className="text-xs font-semibold text-primary">Ver feed</Link>}>
         <div className="no-scrollbar -mx-4 flex snap-x gap-3 overflow-x-auto px-4">
           {news.slice(0, 5).map((n) => (
-            <Link key={n.id} to="/ativo/$ticker" params={{ ticker: n.ticker }} className="card-premium flex w-64 shrink-0 snap-start flex-col p-4 transition hover:border-primary/40">
+            <Button variant="ghost" key={n.id} onClick={() => setArticle(n)} className="card-premium flex h-auto w-64 shrink-0 snap-start flex-col items-stretch whitespace-normal p-4 text-left transition hover:border-primary/40">
               <div className="flex items-center justify-between text-xs">
                 <span className="rounded-full bg-primary/15 px-2 py-0.5 font-semibold text-primary">{n.ticker}</span>
                 <RelevanceBadge r={n.relevance} />
               </div>
               <p className="mt-3 line-clamp-3 text-sm font-semibold leading-snug">{n.title}</p>
               <p className="mt-auto pt-3 text-xs text-muted-foreground">{n.source} · {n.date}</p>
-            </Link>
+            </Button>
           ))}
         </div>
       </Section>
@@ -118,6 +125,7 @@ function Home() {
           </ul>
         </SheetContent>
       </Sheet>
+      <NewsDetails article={article} onClose={() => setArticle(null)} />
     </Page>
   );
 }

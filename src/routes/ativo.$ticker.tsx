@@ -4,15 +4,20 @@ import { ArrowLeft, Bot } from "lucide-react";
 import { Area, AreaChart, Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Page, Section, Change, RelevanceBadge } from "@/components/app/ui";
 import { usePortfolio } from "@/lib/portfolio";
-import { CLASS_COLOR, NEWS, brl, dividendHistory, priceHistory, type Asset } from "@/lib/data";
+import { CLASS_COLOR, brl, dividendHistory, priceHistory, type Asset } from "@/lib/data";
+import { newsQueryOptions, useNews } from "@/lib/news-query";
+import { ArticleLink } from "@/components/app/NewsDetails";
 
 export const Route = createFileRoute("/ativo/$ticker")({
+  loader: ({ context }) => context.queryClient.ensureQueryData(newsQueryOptions),
   head: ({ params }) => ({
     meta: [
       { title: `${params.ticker} — Lume` },
       { name: "description", content: `Indicadores, notícias e análise informativa de ${params.ticker}.` },
       { property: "og:title", content: `${params.ticker} — Lume` },
       { property: "og:description", content: `Indicadores, notícias e análise informativa de ${params.ticker}.` },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Ativo,
@@ -42,6 +47,7 @@ function Ativo() {
   const { ticker } = Route.useParams();
   const router = useRouter();
   const { assets } = usePortfolio();
+  const { news: allNews } = useNews();
   const a = assets.find((x) => x.ticker === ticker);
   const hist = useMemo(() => (a && a.price ? priceHistory(a) : []), [a]);
 
@@ -54,7 +60,7 @@ function Ativo() {
   }
   const divs = dividendHistory(a);
   const color = CLASS_COLOR[a.cls];
-  const news = NEWS.filter((n) => n.ticker === a.ticker);
+  const news = allNews.filter((n) => (n.tickers ?? [n.ticker]).includes(a.ticker));
 
   const indicators: [string, string][] = [];
   if (a.dy != null) indicators.push(["Dividend Yield", `${fmt(a.dy, 1)}%`]);
@@ -150,6 +156,7 @@ function Ativo() {
                 </div>
                 <p className="mt-2 text-sm font-semibold">{n.title}</p>
                 <p className="mt-1 text-xs text-muted-foreground">{n.summary}</p>
+                <ArticleLink article={n} />
               </div>
             ))}
           </div>

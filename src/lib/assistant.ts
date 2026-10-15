@@ -1,4 +1,4 @@
-import { NEWS, type Asset, type AssetClass } from "./data";
+import { type News, type Asset, type AssetClass } from "./data";
 
 const fmt = (n: number, d = 1) => n.toLocaleString("pt-BR", { minimumFractionDigits: d, maximumFractionDigits: d });
 const NOTE = "\n\n_Comparação informativa; não constitui recomendação de compra ou venda._";
@@ -18,7 +18,7 @@ function rank(list: Asset[], key: "dy" | "pvp" | "pl", asc: boolean, name: strin
 }
 
 /** Mocked, neutral assistant: compares indicators only. */
-export function answer(q: string, assets: Asset[]): string {
+export function answer(q: string, assets: Asset[], news: News[] = []): string {
   const t = q.toLowerCase();
   const { list, label } = scope(t, assets);
   const asc = /menor|mais baix/.test(t);
@@ -33,7 +33,7 @@ export function answer(q: string, assets: Asset[]): string {
   }
   if (/not(í|i)cia|fato|relevante|mudan/.test(t)) {
     const set = new Set(list.map((a) => a.ticker));
-    const n = NEWS.filter((x) => set.has(x.ticker) && x.relevance === "Alta");
+    const n = news.filter((x) => (x.tickers ?? [x.ticker]).some((ticker) => set.has(ticker)) && x.relevance === "Alta");
     if (!n.length) return `Sem fatos de alta relevância ${label}.`;
     return `Fatos de alta relevância ${label}:\n\n${n.map((x) => `- **${x.ticker}** · ${x.tag}: ${x.title}`).join("\n")}`;
   }

@@ -29,11 +29,11 @@ export function parseFeed(xml: string, source: (typeof NEWS_SOURCES)[number]): N
   const items = parser.parse(xml)?.rss?.channel?.item;
   if (!Array.isArray(items)) return [];
   return items.flatMap((item: Record<string, unknown>) => {
-    const url = safeArticleUrl(item.link, source.domain);
-    const title = plainText(item.title);
-    const publishedAt = parsePublishedAt(item.pubDate);
+    const url = safeArticleUrl(item['link'], source.domain);
+    const title = plainText(item['title']);
+    const publishedAt = parsePublishedAt(item['pubDate']);
     if (!url || !title || !publishedAt) return [];
-    const summary = plainText(item.description).replace(/\s*(The post|O post|Leia também:)[\s\S]*$/i, "").slice(0, 700);
+    const summary = plainText(item['description']).replace(/\s*(The post|O post|Leia também:)[\s\S]*$/i, "").slice(0, 700);
     const text = `${title} ${summary}`.toLowerCase();
     const tag: NewsTag = /dividend|provento|rendimento/.test(text) ? "Dividendos" : /resultado|lucro|balanço/.test(text) ? "Resultados" : /fato relevante/.test(text) ? "Fato relevante" : /emissão/.test(text) ? "Emissão" : /vacância/.test(text) ? "Vacância" : "Mercado";
     return [{ id: url, ticker: "", title, summary, source: source.name, date: new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "America/Sao_Paulo" }).format(new Date(publishedAt)), tag, relevance: tag === "Mercado" ? "Baixa" as const : "Alta" as const, url, publishedAt }];

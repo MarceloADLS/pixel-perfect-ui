@@ -1,8 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { ChevronRight, User, Shield, Lock, Moon, Gauge } from "lucide-react";
+import { ChevronRight, User, Shield, Lock, Moon, Sun, Gauge } from "lucide-react";
 import { Page, Section } from "@/components/app/ui";
 import { Switch } from "@/components/ui/switch";
+import { useTheme } from "@/lib/theme";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/perfil")({
   head: () => ({
@@ -11,6 +13,8 @@ export const Route = createFileRoute("/perfil")({
       { name: "description", content: "Dados, notificações, perfil de risco, segurança e privacidade." },
       { property: "og:title", content: "Perfil — Lume Investimentos" },
       { property: "og:description", content: "Dados, notificações, perfil de risco, segurança e privacidade." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Perfil,
@@ -19,6 +23,7 @@ export const Route = createFileRoute("/perfil")({
 const RISKS = ["Conservador", "Moderado", "Arrojado"] as const;
 
 function Perfil() {
+  const { theme, setTheme } = useTheme();
   const [risk, setRisk] = useState<(typeof RISKS)[number]>("Moderado");
   const [notif, setNotif] = useState({ news: true, results: true, dividends: true, indicators: false, price: true });
   const labels: Record<keyof typeof notif, string> = {
@@ -60,7 +65,14 @@ function Perfil() {
       <Section title="Conta">
         <div className="card-premium divide-y divide-border">
           <Row icon={User} label="Dados do usuário" />
-          <Row icon={Moon} label="Tema" value="Escuro" />
+          <div className="flex items-center gap-3 p-4 text-sm">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-secondary"><Moon className="h-4 w-4" /></span>
+            <span className="flex-1">Tema</span>
+            <div className="flex gap-1 rounded-full bg-secondary p-1" role="group" aria-label="Tema">
+              <Button size="sm" variant={theme === "light" ? "default" : "ghost"} aria-pressed={theme === "light"} onClick={() => setTheme("light")} className="rounded-full px-3"><Sun />Claro</Button>
+              <Button size="sm" variant={theme === "dark" ? "default" : "ghost"} aria-pressed={theme === "dark"} onClick={() => setTheme("dark")} className="rounded-full px-3"><Moon />Escuro</Button>
+            </div>
+          </div>
           <Row icon={Lock} label="Segurança" value="Biometria ativa" />
           <Row icon={Shield} label="Privacidade" />
         </div>

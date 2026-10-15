@@ -14,6 +14,8 @@ export const Route = createFileRoute("/ativos")({
       { name: "description", content: "Cadastre ações, FIIs, ETFs e cripto que você possui ou quer acompanhar." },
       { property: "og:title", content: "Meus ativos — Lume" },
       { property: "og:description", content: "Cadastre ações, FIIs, ETFs e cripto que você possui ou quer acompanhar." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Ativos,

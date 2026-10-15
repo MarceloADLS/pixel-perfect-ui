@@ -3,14 +3,18 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowUp, Bot } from "lucide-react";
 import { usePortfolio } from "@/lib/portfolio";
 import { answer, SUGGESTIONS } from "@/lib/assistant";
+import { newsQueryOptions, useNews } from "@/lib/news-query";
 
 export const Route = createFileRoute("/ia")({
+  loader: ({ context }) => context.queryClient.ensureQueryData(newsQueryOptions),
   head: () => ({
     meta: [
       { title: "Indicadores IA — Lume Investimentos" },
       { name: "description", content: "Pergunte sobre sua carteira e receba análises neutras baseadas nos seus dados." },
       { property: "og:title", content: "Indicadores IA — Lume Investimentos" },
       { property: "og:description", content: "Pergunte sobre sua carteira e receba análises neutras baseadas nos seus dados." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: IA,
@@ -34,6 +38,7 @@ function Rich({ text }: { text: string }) {
 
 function IA() {
   const { assets } = usePortfolio();
+  const { news } = useNews();
   const [msgs, setMsgs] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
@@ -49,7 +54,7 @@ function IA() {
     setInput("");
     setTyping(true);
     setTimeout(() => {
-      setMsgs((m) => [...m, { role: "ai", text: answer(q, assets) }]);
+      setMsgs((m) => [...m, { role: "ai", text: answer(q, assets, news) }]);
       setTyping(false);
       ta.current?.focus();
     }, 900);
